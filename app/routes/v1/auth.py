@@ -1,7 +1,3 @@
-import email
-import random
-import string
-
 import jwt
 from fastapi import APIRouter, Depends, HTTPException, status, Response
 from fastapi.security import OAuth2PasswordRequestForm
@@ -23,14 +19,13 @@ async def login(response: Response, form_data: OAuth2PasswordRequestForm = Depen
     """
     Questo metodo permette di effettuare il login
     """
-    user = db.query(Dipendenti).filter(Dipendenti.username == form_data.username).first()
-    if not user or not verify_password(form_data.password, user.hashed_password):
+    dipendente= db.query(Dipendenti).filter(Dipendenti.username == form_data.username).first()
+    if not dipendente or not verify_password(form_data.password, dipendente.hashed_password):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials")
 
-    access_token = create_access_token(data={"sub": Dipendenti.username})
-    refresh_token = create_refresh_token(data={"sub": Dipendenti.username})  # Genera il refresh token
+    access_token = create_access_token(data={"sub": dipendente.username})
+    refresh_token = create_refresh_token(data={"sub": dipendente.username})  # Genera il refresh token
 
-    # response.headers["Access-Control-Allow-Origin"] = "*"
     return {"access_token": access_token, "refresh_token": refresh_token, "token_type": "bearer"}
 
 
