@@ -8,19 +8,19 @@ from app.utilities.conf import settings
 from app.utilities.database import get_db
 from app.utilities.dependencies import get_current_user
 from app.models import Dipendenti
-from app.schemas.dipendente import Token, PasswordChange, DipendenteBase, RefreshTokenRequest
+from app.schemas.dipendente import Token, PasswordChange, DipendenteBase, RefreshTokenRequest, LoginRequest
 from app.servicies.auth import verify_password, get_password_hash, create_access_token, create_refresh_token
 
 router = APIRouter()
 
 
 @router.post("/login", response_model=Token)
-async def login(response: Response, form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+async def login(response: Response, credentials: LoginRequest, db: Session = Depends(get_db)):
     """
     Questo metodo permette di effettuare il login
     """
-    dipendente= db.query(Dipendenti).filter(Dipendenti.username == form_data.username).first()
-    if not dipendente or not verify_password(form_data.password, dipendente.hashed_password):
+    dipendente = db.query(Dipendenti).filter(Dipendenti.username == credentials.username).first()
+    if not dipendente or not verify_password(credentials.password, dipendente.hashed_password):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials")
 
     access_token = create_access_token(data={"sub": dipendente.username})
