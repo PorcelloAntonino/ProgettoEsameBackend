@@ -55,8 +55,9 @@ async def read_users_me(dipendente: Dipendenti = Depends(get_current_user), db: 
     """
 
     message = {
+        "nome":dipendente.nome,
+        "cognome":dipendente.cognome,
         "username": dipendente.username,
-        "admin": dipendente.admin,
         "email": dipendente.email,
     }
     return message
