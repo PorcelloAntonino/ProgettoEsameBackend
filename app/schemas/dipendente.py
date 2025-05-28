@@ -1,7 +1,24 @@
-from typing import Optional
+from pydantic import BaseModel, EmailStr
+from pydantic import EmailStr
+from pydantic import ConfigDict
 
-from pydantic import ConfigDict, BaseModel
+class DipendenteBase(BaseModel):
+    nome: str
+    cognome: str
+    email: EmailStr
+    username: str
+    admin: bool = False
 
+
+class DipendenteCreate(DipendenteBase):
+    password: str
+
+
+class DipendenteOut(DipendenteBase):
+    id: int
+
+    class Config:
+        orm_mode = True
 
 class Token(BaseModel):
     access_token: str
@@ -12,52 +29,9 @@ class Token(BaseModel):
 class RefreshTokenRequest(BaseModel):
     refresh_token: str
 
-
-class DipendenteBase(BaseModel):
-    username: str
-    admin: bool
-
-
-
-class DipendenteBaseAdmin(DipendenteBase):
-    id: int
-
-
-class UserLogin(DipendenteBase):
-    password: str
-    model_config = ConfigDict(from_attributes=True)
-
-
-class UserCreate(DipendenteBase):
-    password: str
-
-
-class UserUpdate(BaseModel):
-    username: Optional[str] = None
-    password: Optional[str] = None
-    admin: Optional[bool] = None
-    email: Optional[str] = None
-
-
 class PasswordChange(BaseModel):
     old_password: str
     new_password: str
-
-
-class Dipendente(DipendenteBase):
-    id: int
-    model_config = ConfigDict(from_attributes=True)
-
-
-class DipendenteDelete(BaseModel):
-    id: int
-    model_config = ConfigDict(from_attributes=True)
-
-
-class DipendenteList(BaseModel):
-    dipendenti: list[Dipendente]
-    model_config = ConfigDict(from_attributes=True)
-
 
 class LoginRequest(BaseModel):
     username: str

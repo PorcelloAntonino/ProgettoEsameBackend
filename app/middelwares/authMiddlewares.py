@@ -15,7 +15,7 @@ async def admin_access(request: Request, db: Session = Depends(get_db), token: s
     try:
         payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.algorithm])
         username: str = payload.get("sub")
-        if username is None:
+        if username is None:    
             raise credentials_exception
         user = db.query(Dipendenti).filter(Dipendenti.username == username).first()
         if not user or not user.admin:

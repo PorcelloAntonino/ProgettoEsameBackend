@@ -1,11 +1,32 @@
 from fastapi import FastAPI,Request,Response
+from fastapi.middleware.cors import CORSMiddleware
 from app.routes.v1.auth import router as router_auth
+from app.routes.v1.dipendente.dipendente import router as router_dipendenti
+from app.routes.v1.macchine import router as router_macchine
+from app.routes.v1.controlli import router as router_controlli
+from app.routes.v1.vendite import router as router_vendite
+from app.routes.v1.magazzino import router as router_magazino
+from app.routes.v1.macchineControlli import router as router_macchineControlli
 
-
-app = FastAPI()
-
+app = FastAPI() 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 app.include_router(router_auth, tags=["Authentication"])
+app.include_router(router_dipendenti)
+app.include_router(router_macchine)
 
+app.include_router(router_controlli)
+
+app.include_router(router_vendite)
+
+app.include_router(router_magazino)
+
+app.include_router(router_macchineControlli)
 @app.get("/")
 async def root():
     return {"message": "Hello World"}
