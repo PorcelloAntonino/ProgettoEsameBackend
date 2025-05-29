@@ -22,3 +22,4 @@ async def admin_access(request: Request, db: Session = Depends(get_db), token: s
             raise HTTPException(status_code=403, detail="Not enough permissions")
     except JWTError:
         raise credentials_exception
+

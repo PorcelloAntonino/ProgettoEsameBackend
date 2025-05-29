@@ -1,8 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.utilities.database import get_db
-from app import schemas, models
-
+from app import schemas, models, servicies
+from app.servicies.auth import get_password_hash
+from app.utilities.dependencies import get_current_user
 router = APIRouter(prefix="/dipendenti", tags=["Dipendenti"])
 
 
@@ -19,7 +20,7 @@ def create_dipendente(dipendente: schemas.dipendente.DipendenteCreate, db: Sessi
     ).first()
     if db_dip:
         raise HTTPException(status_code=400, detail="Email o username già in uso")
-    hashed = dipendente.password + "notreallyhashed"  # Simulazione hash
+    hashed =get_password_hash( dipendente.password )      # Simulazione hash
     nuovo = models.Dipendenti(
         nome=dipendente.nome,
         cognome=dipendente.cognome,
@@ -32,6 +33,8 @@ def create_dipendente(dipendente: schemas.dipendente.DipendenteCreate, db: Sessi
     db.commit()
     db.refresh(nuovo)
     return nuovo
+
+
 
 
 @router.get("/{dip_id}", response_model=schemas.dipendente.DipendenteOut)
@@ -50,3 +53,4 @@ def delete_dipendente(dip_id: int, db: Session = Depends(get_db)):
     db.delete(dip)
     db.commit()
     return {"detail": "Dipendente eliminato"}
+

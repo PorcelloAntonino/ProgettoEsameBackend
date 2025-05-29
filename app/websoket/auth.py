@@ -3,9 +3,9 @@ from datetime import datetime
 from fastapi import HTTPException
 from jose import jwt, JWTError
 
-from app.core.config import settings
-from app.database import get_db
-from app.models.utente import Utente
+from app.
+from app.utilities.database import get_db
+from app.models.dipendenti import Dipendenti
 
 
 def decode_token(token: str) -> dict:

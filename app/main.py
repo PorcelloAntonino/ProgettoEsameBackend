@@ -7,7 +7,7 @@ from app.routes.v1.controlli import router as router_controlli
 from app.routes.v1.vendite import router as router_vendite
 from app.routes.v1.magazzino import router as router_magazino
 from app.routes.v1.macchineControlli import router as router_macchineControlli
-
+from app.routes.websocket import router as router_websocket
 app = FastAPI() 
 app.add_middleware(
     CORSMiddleware,
@@ -27,6 +27,8 @@ app.include_router(router_vendite)
 app.include_router(router_magazino)
 
 app.include_router(router_macchineControlli)
+
+app.include_router(router_websocket)
 @app.get("/")
 async def root():
     return {"message": "Hello World"}
@@ -54,3 +56,4 @@ async def cors_handler(request: Request, call_next):
     response.headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS, PUT, DELETE'
     response.headers['Access-Control-Allow-Headers'] = 'Authorization, Content-Type'
     return response
+

@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from app import models, schemas
-
+from .auth import get_password_hash
 
 def get_all(db: Session):
     return db.query(models.Dipendenti).all()
@@ -16,7 +16,7 @@ def create(db: Session, dipendente: schemas.dipendenti.DipendenteCreate):
         cognome=dipendente.cognome,
         email=dipendente.email,
         username=dipendente.username,
-        hashed_password=dipendente.password + "notreallyhashed",  # esempio hash
+        hashed_password=get_password_hash(dipendente.password),  # esempio hash
         admin=dipendente.admin
     )
     db.add(new)
@@ -32,3 +32,6 @@ def delete(db: Session, dip_id: int):
         db.commit()
         return True
     return False
+
+def get_all_except_self(db: Session, current_user: models.Dipendenti):
+    return db.query(models.Dipendenti).filter(models.Dipendenti.id!= current_user.id).all()
