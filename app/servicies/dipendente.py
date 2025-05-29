@@ -33,5 +33,5 @@ def delete(db: Session, dip_id: int):
         return True
     return False
 
-def get_all_except_self(db: Session, current_user: models.Dipendenti):
-    return db.query(models.Dipendenti).filter(models.Dipendenti.id!= current_user.id).all()
+def get_all_except_self(db: Session, current_user:str):
+    return db.query(models.Dipendenti).filter(models.Dipendenti.username!= current_user).all()

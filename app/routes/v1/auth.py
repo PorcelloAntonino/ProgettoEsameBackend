@@ -64,12 +64,7 @@ async def read_users_me(dipendente: Dipendenti = Depends(get_current_user), db: 
     return message
 
 
-@router.get("/all_except_me", response_model=list[schemas.dipendente.DipendenteOut])
-async def read_users_except_me_direct(
-    db: Session = Depends(get_db),
-    current_user: models.dipendenti = Depends(get_current_user)
-):
-    return db.query(models.dipendenti).filter(models.dipendenti.id != current_user.id).all()
+
 
 @router.post("/utenti/me/change_password")
 async def change_password(password_change: PasswordChange, db: Session = Depends(get_db),
