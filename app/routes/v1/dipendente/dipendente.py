@@ -34,12 +34,12 @@ def create_dipendente(dipendente: schemas.dipendente.DipendenteCreate, db: Sessi
     db.refresh(nuovo)
     return nuovo
 
-@router.post("/all_except_me", response_model=list[schemas.dipendente.DipendenteOut])
+@router.post("/all_except_me")
 async def read_users_except_by_username(
     data: schemas.dipendente.UsernameInput,
     db: Session = Depends(get_db)
 ):
-    return db.query(models.Dipendenti).filter(models.Dipendenti.username != data.username).all()
+    return {"utenti":db.query(models.Dipendenti).filter(models.Dipendenti.username != data.username).all()}
 
 
 @router.get("/{dip_id}", response_model=schemas.dipendente.DipendenteOut)
